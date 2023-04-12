@@ -1,0 +1,3 @@
+Number of nodes =  107
+Diameter =  6
+Average distance =  4.743078822077235
