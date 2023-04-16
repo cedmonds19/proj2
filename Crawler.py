@@ -43,19 +43,21 @@ artist_keywords = ["weeknd", "Weeknd", "Red Hot Chili Peppers",
             "DeAndre Cortez Way", "Abel Makkonen Tesfaye"]
 
 
-def weeknd_tweets(output_file):
+def weeknd_tweets(output_file): 
     weeknd_tweets = []
     weeknd_tweet_data = pd.DataFrame(columns=['tweet_id', 'Username', 'text', 'Artist', 'created_at'])
     num_tweets = 50
     
     for keyword in weeknd_keywords:
-        for tweet in tweepy.Cursor(api.search_tweets, q=keyword, lang='en').items(num_tweets):
-            weeknd_tweets.append(tweet)
+        for tweet in tweepy.Cursor(api.search_tweets, q=keyword, lang='en', tweet_mode='extended').items(num_tweets):
+            # Filter out retweets
+            if not hasattr(tweet, 'retweeted_status'):
+                weeknd_tweets.append(tweet)
     
     for tweet in weeknd_tweets:
         weeknd_tweet_data = weeknd_tweet_data.append({'tweet_id': tweet.id,
                                                       'Username': tweet.user.screen_name,
-                                                      'text': tweet.text,
+                                                      'text': tweet.full_text,
                                                       'Artist': "The Weeknd",
                                                       'created_at': tweet.created_at},
                                                      ignore_index=True)
@@ -64,6 +66,7 @@ def weeknd_tweets(output_file):
     weeknd_tweet_data.to_csv(output_file, index=False)
     
     return weeknd_tweet_data
+
 
 def classify_sentiment(text):
     analysis = TextBlob(text)
