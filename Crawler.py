@@ -1,8 +1,6 @@
 # Packages and Imports
 import tweepy
 import pandas as pd
-from twitter_scraper import get_tweets
-from multiprocessing import Pool
 import twitter
 import json
 import networkx as nx # networkx - graph 
