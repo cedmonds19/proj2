@@ -2,6 +2,7 @@
 import tweepy
 import pandas as pd
 import twitter
+from textblob import TextBlob
 import json
 import networkx as nx # networkx - graph 
 import matplotlib
@@ -14,7 +15,6 @@ from urllib.error import URLError
 from http.client import BadStatusLine
 import matplotlib.pyplot as plt # For plotting graph
 import pickle # Handling output?
-
 
 # Twitter dev account login for access keys/tokens/secrets - Example 1 Cookbook
 # Elevated account access
@@ -31,7 +31,6 @@ auth.set_access_token(OAUTH_TOKEN, OAUTH_TOKEN_SECRET)
 # create the API object
 api = tweepy.API(auth)
 # Keywords - word bank for tweet scraping
-
 tweets = []
 
 weeknd_keywords = ["Weeknd", "Abel Makkonen Tesfaye"]
@@ -44,7 +43,7 @@ artist_keywords = ["weeknd", "Weeknd", "Red Hot Chili Peppers",
             "DeAndre Cortez Way", "Abel Makkonen Tesfaye"]
 
 
-def weeknd_tweets():
+def weeknd_tweets(output_file):
     weeknd_tweets = []
     weeknd_tweet_data = pd.DataFrame(columns=['tweet_id', 'Username', 'text', 'Artist', 'created_at'])
     num_tweets = 50
@@ -60,10 +59,22 @@ def weeknd_tweets():
                                                       'Artist': "The Weeknd",
                                                       'created_at': tweet.created_at},
                                                      ignore_index=True)
+    
+    # Print the dataframe to a new file
+    weeknd_tweet_data.to_csv(output_file, index=False)
+    
     return weeknd_tweet_data
 
+def classify_sentiment(text):
+    analysis = TextBlob(text)
+    if analysis.sentiment.polarity > 0:
+        return 'positive'
+    elif analysis.sentiment.polarity == 0:
+        return 'neutral'
+    else:
+        return 'negative'
 
-def chili_pepper_tweets():
+def chili_pepper_tweets(output_file):
     chili_pepper_tweets = []
     chili_pepper_tweet_data = pd.DataFrame(columns=['tweet_id', 'Username', 'text', 'Artist', 'created_at'])
     num_tweets = 10
@@ -79,10 +90,11 @@ def chili_pepper_tweets():
                                                       'Artist': "Red Hot Chili Peppers",
                                                       'created_at': cp_tweet.created_at},
                                                      ignore_index=True)
+    chili_pepper_tweet_data.to_csv(output_file, index=False)
     return chili_pepper_tweet_data
 
 
-def soulja_boy_tweets():
+def soulja_boy_tweets(output_file):
     soulja_boy_tweets = []
     soulja_boy_tweet_data = pd.DataFrame(columns=['tweet_id', 'Username', 'text', 'Artist', 'created_at'])
     num_tweets = 10
@@ -98,4 +110,27 @@ def soulja_boy_tweets():
                                                       'Artist': "Soulja Boy",
                                                       'created_at': sb_tweet.created_at},
                                                      ignore_index=True)
+    soulja_boy_tweet_data.to_csv(output_file, index=False)
     return soulja_boy_tweet_data
+
+def add_polarity_score(text):
+    analysis = TextBlob(text)
+    return analysis.sentiment.polarity
+
+def sentiment_analysis(dataframeFile):
+    # Load the data frame
+    df = pd.read_csv(dataframeFile)
+    # Create a new column for sentiment classification
+    df['sentiment'] = df['text'].apply(classify_sentiment)
+    # Create a new column for polarity score
+    df['polarity'] = df['text'].apply(add_polarity_score)
+    # Save the updated data frame as a new file
+    dataFrameAsString = dataframeFile
+    parts = dataFrameAsString.split(".csv")
+    dataFrameWithPolarity = parts[0] + "WithPolarity.csv" 
+    df.to_csv(dataFrameWithPolarity, index=False)
+
+
+if __name__ == "__main__":
+    weeknd_tweets('weekendOutput.csv')
+    sentiment_analysis('weekendOutput.csv')
