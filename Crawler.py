@@ -64,14 +64,15 @@ artist_keywords = ["weeknd", "Weeknd", "Red Hot Chili Peppers",
 
 
 def weeknd_tweets(keyword):
+    weeknd_tweets = []
     weeknd_tweet_data = pd.DataFrame(columns=['tweet_id', 'Username', 'text', 'Artist', 'created_at'])
     num_tweets = 50
     
     for keyword in weeknd_keywords:
         for tweet in tweepy.Cursor(api.search_tweets, q=keyword, lang='en').items(num_tweets):
-            tweets.append(tweet)
+            weeknd_tweets.append(tweet)
     
-    for tweet in tweets:
+    for tweet in weeknd_tweets:
         weeknd_tweet_data = weeknd_tweet_data.append({'tweet_id': tweet.id,
                                                       'Username': tweet.user.screen_name,
                                                       'text': tweet.text,
@@ -84,7 +85,7 @@ def weeknd_tweets(keyword):
 # In[10]:
 
 
-weeknd_tweets("Weeknd")
+print(weeknd_tweets("Abel Makkonen Tesfaye"))
 
 
 # In[ ]:
