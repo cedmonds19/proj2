@@ -70,8 +70,9 @@ def clean_tweets(tweet):
 # Crawl tweets regarding The Weeknd and store to dataframe
 def weeknd_tweets(output_file): 
     weeknd_tweets = []
+    # Dataframe to add tweets about the Weeknd for analysis
     weeknd_tweet_data = pd.DataFrame(columns=['tweet_id', 'Username', 'text', 'Artist', 'created_at'])
-    num_tweets = 50
+    num_tweets = 5000
     
     for keyword in weeknd_keywords:
         for tweet in tweepy.Cursor(api.search_tweets, q=keyword, lang='en', tweet_mode='extended').items(num_tweets):
@@ -79,6 +80,7 @@ def weeknd_tweets(output_file):
             if not hasattr(tweet, 'retweeted_status'):
                 weeknd_tweets.append(tweet)
     
+    # Add tweets to dataframe
     for tweet in weeknd_tweets:
         weeknd_tweet_data = weeknd_tweet_data.append({'tweet_id': tweet.id, # Dataframe columns being filled
                                                       'Username': tweet.user.screen_name,
@@ -86,7 +88,7 @@ def weeknd_tweets(output_file):
                                                       'Artist': "The Weeknd",
                                                       'created_at': tweet.created_at},
                                                      ignore_index=True)
-    # Print the dataframe to a new file
+    # Clean tweets and print/save the dataframe to a new file
     weeknd_tweet_data.drop_duplicates()
     weeknd_tweet_data['text'] = weeknd_tweet_data['text'].apply(clean_tweets)
     weeknd_tweet_data.to_csv(output_file, index=False)
@@ -106,7 +108,7 @@ def classify_sentiment(text):
 def chili_pepper_tweets(output_file):
     chili_pepper_tweets = []
     chili_pepper_tweet_data = pd.DataFrame(columns=['tweet_id', 'Username', 'text', 'Artist', 'created_at'])
-    num_tweets = 50
+    num_tweets = 5000
     
     for keyword in chili_pepper_keywords:
         for cp_tweet in tweepy.Cursor(api.search_tweets, q=keyword, lang='en').items(num_tweets):
@@ -114,6 +116,7 @@ def chili_pepper_tweets(output_file):
             if not hasattr(cp_tweet, 'retweeted_status'):
                 chili_pepper_tweets.append(cp_tweet)
     
+    # Add tweets to dataframe
     for cp_tweet in chili_pepper_tweets:
         chili_pepper_tweet_data = chili_pepper_tweet_data.append({'tweet_id': cp_tweet.id,
                                                       'Username': cp_tweet.user.screen_name,
@@ -121,6 +124,7 @@ def chili_pepper_tweets(output_file):
                                                       'Artist': "Red Hot Chili Peppers",
                                                       'created_at': cp_tweet.created_at},
                                                      ignore_index=True)
+    # Clean tweets and print/save the dataframe to a new file
     chili_pepper_tweet_data.drop_duplicates()
     chili_pepper_tweet_data['text'] = chili_pepper_tweet_data['text'].apply(clean_tweets)
     chili_pepper_tweet_data.to_csv(output_file, index=False)
@@ -130,7 +134,7 @@ def chili_pepper_tweets(output_file):
 def soulja_boy_tweets(output_file):
     soulja_boy_tweets = []
     soulja_boy_tweet_data = pd.DataFrame(columns=['tweet_id', 'Username', 'text', 'Artist', 'created_at'])
-    num_tweets = 10
+    num_tweets = 5000
     
     for keyword in soulja_boy_keywords:
         for sb_tweet in tweepy.Cursor(api.search_tweets, q=keyword, lang='en').items(num_tweets):
@@ -138,6 +142,7 @@ def soulja_boy_tweets(output_file):
             if not hasattr(sb_tweet, 'retweeted_status'):
                 soulja_boy_tweets.append(sb_tweet)
     
+    # Add tweets to dataframe
     for sb_tweet in soulja_boy_tweets:
         soulja_boy_tweet_data = soulja_boy_tweet_data.append({'tweet_id': sb_tweet.id,
                                                       'Username': sb_tweet.user.screen_name,
@@ -145,6 +150,7 @@ def soulja_boy_tweets(output_file):
                                                       'Artist': "Soulja Boy",
                                                       'created_at': sb_tweet.created_at},
                                                      ignore_index=True)
+    # Clean tweets and print/save the dataframe to a new file
     soulja_boy_tweet_data.drop_duplicates()
     soulja_boy_tweet_data['text'] = soulja_boy_tweet_data['text'].apply(clean_tweets)    
     soulja_boy_tweet_data.to_csv(output_file, index=False)
@@ -157,10 +163,13 @@ def add_polarity_score(text):
 def sentiment_analysis(dataframeFile):
     # Load the data frame
     df = pd.read_csv(dataframeFile)
+    
     # Create a new column for sentiment classification
     df['sentiment'] = df['text'].apply(classify_sentiment)
+   
     # Create a new column for polarity score
     df['polarity'] = df['text'].apply(add_polarity_score)
+    
     # Save the updated data frame as a new file
     dataFrameAsString = dataframeFile
     parts = dataFrameAsString.split(".csv")
@@ -169,7 +178,14 @@ def sentiment_analysis(dataframeFile):
 
 
 if __name__ == "__main__":
+    # Weeknd crawler function call and sentiment analysis
     weeknd_tweets('weekendOutput.csv')
     sentiment_analysis('weekendOutput.csv')
+
+    # Chili Peppers crawler function call and sentiment analysis
     chili_pepper_tweets('chiliPepperOutput.csv')
     sentiment_analysis('chiliPepperOutput.csv')
+
+    # Soulja Boy crawler function call and sentiment analysis
+    soulja_boy_tweets('souljaBoyOutput.csv')
+    sentiment_analysis('souljaBoyOutput.csv')
