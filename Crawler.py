@@ -36,7 +36,7 @@ api = tweepy.API(auth, wait_on_rate_limit=True, retry_count=10, retry_delay=5, r
 # Keywords for tweets mentioning the Weeknd, Red Hot Chili Peppers, and Soulja Boy
 weeknd_keywords = ["Weeknd", "Abel Makkonen Tesfaye"]
 chili_pepper_keywords = ["red hot chili peppers", "chili peppers", "rhcp"]
-soulja_boy_keywords = ["DeAndre Cortez Way", "Soulja Boy"]
+miley_cyrus_keywords = ["Miley Cyrus", "Hannah Montana"]
 
 # Emoticons (in case of old style)
 emoticons_happy = set([
@@ -111,7 +111,6 @@ def classify_sentiment(text):
 
 def chili_pepper_tweets(output_file):
     chili_pepper_tweets = []
-    chili_pepper_tweet_data = pd.DataFrame(columns=['tweet_id', 'Username', 'text', 'Artist', 'created_at'])
     num_tweets = 8000
     
     for keyword in chili_pepper_keywords:
@@ -121,46 +120,54 @@ def chili_pepper_tweets(output_file):
                 chili_pepper_tweets.append(cp_tweet)
     
     # Add tweets to dataframe
+    chili_pepper_tweet_data = []
     for cp_tweet in chili_pepper_tweets:
-        chili_pepper_tweet_data = chili_pepper_tweet_data.append({'tweet_id': cp_tweet.id,
+        chili_pepper_tweet_dict = {'tweet_id': cp_tweet.id,
                                                       'Username': cp_tweet.user.screen_name,
                                                       'text': cp_tweet.text,
                                                       'Artist': "Red Hot Chili Peppers",
-                                                      'created_at': cp_tweet.created_at},
-                                                     ignore_index=True)
+                                                      'created_at': cp_tweet.created_at}
+        chili_pepper_tweet_data.append(chili_pepper_tweet_dict)
+    # Create DataFrame from list of dictionaries using pd.concat
+    chili_pepper_tweet_data_df = pd.concat([pd.DataFrame(data=[cp_tweet]) for cp_tweet in chili_pepper_tweet_data], ignore_index=True)
     # Clean tweets and print/save the dataframe to a new file
-    chili_pepper_tweet_data.drop_duplicates()
-    chili_pepper_tweet_data.dropna()
-    chili_pepper_tweet_data['text'] = chili_pepper_tweet_data['text'].apply(clean_tweets, str)
-    chili_pepper_tweet_data.to_csv(output_file, index=False)
-    return chili_pepper_tweet_data
+    # Clean tweets and print/save the dataframe to a new file
+    chili_pepper_tweet_data_df.drop_duplicates()
+    chili_pepper_tweet_data_df.dropna()
+    chili_pepper_tweet_data_df['text'] = chili_pepper_tweet_data['text'].apply(clean_tweets, str)
+    chili_pepper_tweet_data_df.to_csv(output_file, index=False)
+    return chili_pepper_tweet_data_df
 
-
-def soulja_boy_tweets(output_file):
-    soulja_boy_tweets = []
-    soulja_boy_tweet_data = pd.DataFrame(columns=['tweet_id', 'Username', 'text', 'Artist', 'created_at'])
+# Soulja Boy crawler
+def miley_cyrus_tweets(output_file):
+    miley_cyrus_tweets = []
     num_tweets = 8000
     
-    for keyword in soulja_boy_keywords:
-        for sb_tweet in tweepy.Cursor(api.search_tweets, q=keyword, lang='en').items(num_tweets):
+    # Keyword detection for soulja boy
+    for keyword in miley_cyrus_keywords:
+        for mc_tweet in tweepy.Cursor(api.search_tweets, q=keyword, lang='en').items(num_tweets):
             # Filter out retweets
-            if not hasattr(sb_tweet, 'retweeted_status'):
-                soulja_boy_tweets.append(sb_tweet)
+            if not hasattr(mc_tweet, 'retweeted_status'):
+                miley_cyrus_tweets.append(mc_tweet)
 
     # Add tweets to dataframe
-    for sb_tweet in soulja_boy_tweets:
-        soulja_boy_tweet_data = soulja_boy_tweet_data.append({'tweet_id': sb_tweet.id,
-                                                      'Username': sb_tweet.user.screen_name,
-                                                      'text': sb_tweet.text,
-                                                      'Artist': "Soulja Boy",
-                                                      'created_at': sb_tweet.created_at},
-                                                     ignore_index=True)
+    miley_cyrus_tweet_data = []
+    for mc_tweet in miley_cyrus_tweets:
+        miley_cyrus_tweet_dict = {'tweet_id': mc_tweet.id,
+                                                      'Username': mc_tweet.user.screen_name,
+                                                      'text': mc_tweet.text,
+                                                      'Artist': "Miley Cyrus",
+                                                      'created_at': mc_tweet.created_at}
+        miley_cyrus_tweet_data.append(miley_cyrus_tweet_dict)
+    
+    # Create DataFrame from list of dictionaries using pd.concat
+    miley_cyrus_tweet_data_df = pd.concat([pd.DataFrame(data=[mc_tweet]) for mc_tweet in miley_cyrus_tweet_data], ignore_index=True)
     # Clean tweets and print/save the dataframe to a new file
-    soulja_boy_tweet_data.drop_duplicates()
-    soulja_boy_tweet_data.dropna()
-    soulja_boy_tweet_data['text'] = soulja_boy_tweet_data['text'].apply(clean_tweets, str)    
-    soulja_boy_tweet_data.to_csv(output_file, index=False)
-    return soulja_boy_tweet_data
+    miley_cyrus_tweet_data_df.drop_duplicates()
+    miley_cyrus_tweet_data_df.dropna()
+    miley_cyrus_tweet_data_df['text'] = miley_cyrus_tweet_data_df['text'].apply(clean_tweets, str)    
+    miley_cyrus_tweet_data_df.to_csv(output_file, index=False)
+    return miley_cyrus_tweet_data_df
 
 def add_polarity_score(text):
     analysis = TextBlob(text)
@@ -186,13 +193,13 @@ def sentiment_analysis(dataframeFile):
 
 if __name__ == "__main__":
     # Weeknd crawler function call and sentiment analysis
-    weeknd_tweets('weekendOutput.csv')
-    sentiment_analysis('weekendOutput.csv')
+    # weeknd_tweets('weekendOutput.csv')
+    # sentiment_analysis('weekendOutput.csv')
 
     # # Chili Peppers crawler function call and sentiment analysis
     # chili_pepper_tweets('chiliPepperOutput.csv')
     # sentiment_analysis('chiliPepperOutput.csv')
 
     # # Soulja Boy crawler function call and sentiment analysis
-    # soulja_boy_tweets('souljaBoyOutput.csv')
-    # sentiment_analysis('souljaBoyOutput.csv')
+    miley_cyrus_tweets('mileyCyrusOutput.csv')
+    sentiment_analysis('mileyCyrusOutput.csv')
