@@ -17,7 +17,7 @@ from urllib.error import URLError
 from http.client import BadStatusLine
 import matplotlib.pyplot as plt # For plotting graph
 
-# Twitter dev account login for access keys/tokens/secrets - Example 1 Cookbook
+# Twitter dev account login for access keys/tokens/secrets
 # Elevated account access
 CONSUMER_KEY = '12Cyj4UGAlzhqicly5CCQgpK0'
 CONSUMER_SECRET = 'UpyuspnNzo0YTpXWy7h9qLJAZSfCXsDmQlQGQpk6TMCdPwooH8'
@@ -30,7 +30,7 @@ auth.set_access_token(OAUTH_TOKEN, OAUTH_TOKEN_SECRET)
 
 # Create  API object
 # Parameters: Access keys and tokens
-# wait_on_rate_limit set to true to handle exceeding rate limit
+# wait_on_rate_limit set to true to handle exceeding rate limit with correct errors
 api = tweepy.API(auth, wait_on_rate_limit=True, retry_count=10, retry_delay=5, retry_errors=set([503]))
 
 # Keywords for tweets mentioning the Weeknd, Red Hot Chili Peppers, Soulja Boy, and Miley Cyrus
@@ -135,7 +135,7 @@ def chili_pepper_tweets(output_file):
         chili_pepper_tweet_data.append(chili_pepper_tweet_dict)
     # Create DataFrame from list of dictionaries using pd.concat
     chili_pepper_tweet_data_df = pd.concat([pd.DataFrame(data=[cp_tweet]) for cp_tweet in chili_pepper_tweet_data], ignore_index=True)
-    # Clean tweets and print/save the dataframe to a new file
+    
     # Clean tweets and print/save the dataframe to a new file
     chili_pepper_tweet_data_df.drop_duplicates()
     chili_pepper_tweet_data_df.dropna()
@@ -169,11 +169,13 @@ def miley_cyrus_tweets(output_file):
     
     # Create DataFrame from list of dictionaries using pd.concat
     miley_cyrus_tweet_data_df = pd.concat([pd.DataFrame(data=[mc_tweet]) for mc_tweet in miley_cyrus_tweet_data], ignore_index=True)
+    
     # Clean tweets and print/save the dataframe to a new file
     miley_cyrus_tweet_data_df.drop_duplicates()
     miley_cyrus_tweet_data_df.dropna()
     miley_cyrus_tweet_data_df['text'] = miley_cyrus_tweet_data_df['text'].apply(clean_tweets, str)    
     miley_cyrus_tweet_data_df.to_csv(output_file, index=False)
+    
     return miley_cyrus_tweet_data_df
 
 # TextBlob framework used again here
@@ -197,7 +199,7 @@ def sentiment_analysis(dataframeFile):
     # Save the updated data frame as a new file
     dataFrameAsString = dataframeFile
     parts = dataFrameAsString.split(".csv")
-    dataFrameWithPolarity = parts[0] + "WithPolarity.csv" 
+    dataFrameWithPolarity = parts[0] + "WithPolarity.csv"
     df.to_csv(dataFrameWithPolarity, index=False)
 
 
