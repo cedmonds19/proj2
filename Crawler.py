@@ -16,24 +16,24 @@ from sys import maxsize as maxint
 from urllib.error import URLError
 from http.client import BadStatusLine
 import matplotlib.pyplot as plt # For plotting graph
-import pickle # Handling output?
 
 # Twitter dev account login for access keys/tokens/secrets - Example 1 Cookbook
 # Elevated account access
-
 CONSUMER_KEY = '12Cyj4UGAlzhqicly5CCQgpK0'
 CONSUMER_SECRET = 'UpyuspnNzo0YTpXWy7h9qLJAZSfCXsDmQlQGQpk6TMCdPwooH8'
 OAUTH_TOKEN = '3304948091-0iu8Qs2xOlmP99dyRB4STJlxYIz09GTgZqaUDN4'
 OAUTH_TOKEN_SECRET = 'p08sdleLTpZLb9476QqbHNb5U5bndus8jxO3bwcmcAz9j'
     
-# authenticate with the Twitter API
+# authenticate with the Tweepy API
 auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 auth.set_access_token(OAUTH_TOKEN, OAUTH_TOKEN_SECRET)
 
-# Create the API object that waits for rate limit period to expire and continues
+# Create  API object
+# Parameters: Access keys and tokens
+# wait_on_rate_limit set to true to handle exceeding rate limit
 api = tweepy.API(auth, wait_on_rate_limit=True, retry_count=10, retry_delay=5, retry_errors=set([503]))
 
-# Keywords for tweets mentioning the Weeknd, Red Hot Chili Peppers, and Soulja Boy
+# Keywords for tweets mentioning the Weeknd, Red Hot Chili Peppers, Soulja Boy, and Miley Cyrus
 weeknd_keywords = ["Weeknd", "Abel Makkonen Tesfaye"]
 chili_pepper_keywords = ["red hot chili peppers", "chili peppers", "rhcp"]
 miley_cyrus_keywords = ["Miley Cyrus", "Hannah Montana"]
@@ -63,11 +63,12 @@ emoji_pattern = re.compile("["
          "]+", flags=re.UNICODE)
 
 # Clean tweets
+# Uses preprocessor package: cleans emojies, hashtags, and URLs
 def clean_tweets(tweet):
     clean_tweet = p.clean(tweet)
     return clean_tweet
 
-# Crawl tweets regarding The Weeknd and store to dataframe
+# Crawl tweets regarding The Weeknd and store to dataframe and csv file
 def weeknd_tweets(output_file): 
     weeknd_tweets = []
     num_tweets = 8000
@@ -79,7 +80,7 @@ def weeknd_tweets(output_file):
             if not hasattr(tweet, 'retweeted_status'):
                 weeknd_tweets.append(tweet)
 
-    # Add tweets to dataframe
+    # Add tweets to list
     weeknd_tweet_data = []
     for tweet in weeknd_tweets:
         weeknd_tweet_dict = {'tweet_id': tweet.id, # Dataframe columns being filled
@@ -91,7 +92,8 @@ def weeknd_tweets(output_file):
     
     # Create DataFrame from list of dictionaries using pd.concat
     weeknd_tweet_data_df = pd.concat([pd.DataFrame(data=[tweet]) for tweet in weeknd_tweet_data], ignore_index=True)
-    # Clean tweets and print/save the dataframe to a new file
+    
+    # Drop duplicate and NaN values and print/save the dataframe to a new file
     weeknd_tweet_data_df.drop_duplicates()
     weeknd_tweet_data_df.dropna()
     weeknd_tweet_data_df['text'] = weeknd_tweet_data_df['text'].apply(clean_tweets, str) # Clean tweets and make sure they are str
@@ -99,7 +101,8 @@ def weeknd_tweets(output_file):
     
     return weeknd_tweet_data_df # csv file
 
-
+# TextBlob framework for sentiment analysis
+# Classifies each tweet as either positive, negative, or neutral
 def classify_sentiment(text):
     analysis = TextBlob(text)
     if analysis.sentiment.polarity > 0:
@@ -109,6 +112,8 @@ def classify_sentiment(text):
     else:
         return 'negative'
 
+# Crawl tweets regarding RHCP and store to dataframe and csv file
+# Same as initial weekend crawler but with different keywords
 def chili_pepper_tweets(output_file):
     chili_pepper_tweets = []
     num_tweets = 8000
@@ -138,7 +143,9 @@ def chili_pepper_tweets(output_file):
     chili_pepper_tweet_data_df.to_csv(output_file, index=False)
     return chili_pepper_tweet_data_df
 
-# Soulja Boy crawler
+# Miley Cyrus crawler - Same as previous two with different keybank
+# This was initially our Soulja Boy crawler
+# Switched names and keywords after running it for Soulja Boy
 def miley_cyrus_tweets(output_file):
     miley_cyrus_tweets = []
     num_tweets = 8000
@@ -169,10 +176,13 @@ def miley_cyrus_tweets(output_file):
     miley_cyrus_tweet_data_df.to_csv(output_file, index=False)
     return miley_cyrus_tweet_data_df
 
+# TextBlob framework used again here
+# Adds polarity value for each tweet
 def add_polarity_score(text):
     analysis = TextBlob(text)
     return analysis.sentiment.polarity
 
+# Creates new dataset with added columns after tweet Sentiment Analysis
 def sentiment_analysis(dataframeFile):
     # Load the data frame
     df = pd.read_csv(dataframeFile)
@@ -192,14 +202,14 @@ def sentiment_analysis(dataframeFile):
 
 
 if __name__ == "__main__":
-    # Weeknd crawler function call and sentiment analysis
-    # weeknd_tweets('weekendOutput.csv')
-    # sentiment_analysis('weekendOutput.csv')
+    # Weeknd crawler function call and sentiment analysis tweet data
+    weeknd_tweets('weekendOutput.csv')
+    sentiment_analysis('weekendOutput.csv')
 
-    # # Chili Peppers crawler function call and sentiment analysis
-    # chili_pepper_tweets('chiliPepperOutput.csv')
-    # sentiment_analysis('chiliPepperOutput.csv')
+    # Chili Peppers crawler function call and sentiment analysis tweet data
+    chili_pepper_tweets('chiliPepperOutput.csv')
+    sentiment_analysis('chiliPepperOutput.csv')
 
-    # # Soulja Boy crawler function call and sentiment analysis
+    # Soulja Boy crawler function call and sentiment analysis tweet data
     miley_cyrus_tweets('mileyCyrusOutput.csv')
     sentiment_analysis('mileyCyrusOutput.csv')
