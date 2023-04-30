@@ -49,6 +49,7 @@ Clicking run as is will:
 * Run TextBlob sentiment analysis on every tweet collected and add sentiment classification and polarity score columns to a new dataframe
 
 Below is our implementation of our Weeknd tweet crawling function in Crawler.py where tweets are collected, cleaned, and added to a dataframe.
+
 <img width="795" alt="Screenshot 2023-04-30 at 1 12 00 PM" src="https://user-images.githubusercontent.com/56307593/235366694-f130f02d-12c0-48ea-a310-898145b68bb0.png">
 
 mergeData.ipynb is a very simple script that reads in our saved tweet csv files and combines them into one. Clustering and other algorithms require data from one source, which is the purpose of this file.
