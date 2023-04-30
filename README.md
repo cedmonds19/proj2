@@ -3,7 +3,10 @@
 
 A Python project aimed at community detection for tweets about four different artists, network modeling, classification, and prediction.
 Our project contains two main portions of code:
-* Tweet Crawling and Sentiment Analysis using Tweepy API and the TextBlob framework for language processing
+* Tweet Crawling and Sentiment Analysis using:
+  - Tweepy API
+  - Preprocessor package for langauge processing and cleaning
+  - TextBlob framework for sentiment analysis tools
 
 <img width="757" alt="Screenshot 2023-04-30 at 12 55 10 PM" src="https://user-images.githubusercontent.com/56307593/235365893-378433ae-725c-4d6d-a781-44552224282b.png">
 
@@ -39,8 +42,6 @@ pip install scipy
 
 Once all of the above dependencies have been properly installed, it's time to install our project files.
 The file used for tweet scraping, data preprocessing/cleaning, and data collection is Crawler.py
-mergeData.ipynb combines all of our tweet data into a singular csv file.
-Clustering-NN-On-CSV.py features our machine learning models and algorithms mentioned above.
 
 # Crawler.py
 After authenticating unique access keys and tokens, Crawler.py is ready to collect tweets and run sentiment analysis. 
