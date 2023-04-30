@@ -52,5 +52,6 @@ Below is our implementation of our Weeknd tweet crawling function in Crawler.py 
 <img width="795" alt="Screenshot 2023-04-30 at 1 12 00 PM" src="https://user-images.githubusercontent.com/56307593/235366694-f130f02d-12c0-48ea-a310-898145b68bb0.png">
 
 mergeData.ipynb is a very simple script that reads in our saved tweet csv files and combines them into one. Clustering and other algorithms require data from one source, which is the purpose of this file.
+
 <img width="505" alt="Screenshot 2023-04-30 at 1 53 31 PM" src="https://user-images.githubusercontent.com/56307593/235368530-b93ec303-8645-4b81-88bc-b8f3b8c4a1bf.png">
 
