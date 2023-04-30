@@ -4,14 +4,15 @@
 A Python project aimed at community detection for tweets about four different artists, network modeling, classification, and prediction.
 Our project contains two main portions of code:
 * Tweet Crawling and Sentiment Analysis using Tweepy API and the TextBlob framework for language processing
+
+<img width="757" alt="Screenshot 2023-04-30 at 12 55 10 PM" src="https://user-images.githubusercontent.com/56307593/235365893-378433ae-725c-4d6d-a781-44552224282b.png">
+
 * Machine Learning Models and Algorithms using multiple classification and optimization algorithms inlcuding:
   - Clustering (K-Means and Agglomerative)
   - Feed Forward Neural Network (Keras sequential model)
   - MLP Classifier Backpropagated FFNN
   - Genetic Algorithm (PyGad)
   - Differential Evolution (SciPy)
-
-<img width="757" alt="Screenshot 2023-04-30 at 12 55 10 PM" src="https://user-images.githubusercontent.com/56307593/235365893-378433ae-725c-4d6d-a781-44552224282b.png">
 
 
 # INSTALLATION
@@ -23,7 +24,7 @@ Prerequesites:
 * Tweepy
 * preprocessor
 * Elevated account access for Twitter Dev Account
-# SciPy
+* SciPy
 
 ```
 pip install textblob
@@ -35,16 +36,20 @@ pip install scikit-learn
 pip install pandas
 pip install scipy
 ```
+
 Once all of the above dependencies have been properly installed, it's time to install our project files.
 The file used for tweet scraping, data preprocessing/cleaning, and data collection is Crawler.py
+mergeData.ipynb combines all of our tweet data into a singular csv file.
+Clustering-NN-On-CSV.py features our machine learning models and algorithms mentioned above.
 
-* After authenticating unique access keys and tokens, Crawler.py is ready to collect tweets and run SA. 
-The screenshot of our code below is one of our three crawler functions.
+# Crawler.py
+After authenticating unique access keys and tokens, Crawler.py is ready to collect tweets and run sentiment analysis. 
 
-Clicking run as is will:
-* Collect multiple thousand user tweets containing artist keywords defined in keyword lists
-* Filter our retweets
-* Add each tweets ID, username, the tokenized tweet text, the artist involved, and the date screated to a pandas dataframe
+Running "Crawler.py" as is will:
+* Collect multiple thousand user tweets containing artist keywords defined in keyword lists for our three different crawling functions
+  - The number of tweets collected depends on the time you allow the program to run. Waiting on rate limits and allowing the program to stop naturally will result in the most number of tweets being collected.
+* Filter our retweets, hashtags, emojies, etc.
+* Add each ID, username, the tokenized tweet text, the artist involved, and the date screated to a pandas dataframe
 * Clean tweets further unsuring no NaN values, duplicates, or non-string values
 * Run TextBlob sentiment analysis on every tweet collected and add sentiment classification and polarity score columns to a new dataframe
 
