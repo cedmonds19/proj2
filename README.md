@@ -1,8 +1,5 @@
 # Community Detection with Sentiment Analysis in Musical Preference with Twitter
-[![Version](https://img.shields.io/badge/tag-v1.0-blue)](https://github.com/cedmonds19/proj2/releases/tag/v1.0)
-[![Latest Version](https://img.shields.io/github/v/tag/cedmonds19/proj2?color=blue&label=Latest%20Version)](https://github.com/username/repo/releases)
 ![made-with-python](https://user-images.githubusercontent.com/56307593/235365242-e5901619-44c0-4b9c-8cde-cb423d12279b.svg)
-
 
 A Python project aimed at community detection for tweets about four different artists, network modeling, classification, and prediction.
 Our project contains two main portions of code:
