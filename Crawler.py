@@ -19,10 +19,10 @@ import matplotlib.pyplot as plt # For plotting graph
 
 # Twitter dev account login for access keys/tokens/secrets
 # Elevated account access
-CONSUMER_KEY = '12Cyj4UGAlzhqicly5CCQgpK0'
-CONSUMER_SECRET = 'UpyuspnNzo0YTpXWy7h9qLJAZSfCXsDmQlQGQpk6TMCdPwooH8'
-OAUTH_TOKEN = '3304948091-0iu8Qs2xOlmP99dyRB4STJlxYIz09GTgZqaUDN4'
-OAUTH_TOKEN_SECRET = 'p08sdleLTpZLb9476QqbHNb5U5bndus8jxO3bwcmcAz9j'
+CONSUMER_KEY = 'CONSUMER_KEY'
+CONSUMER_SECRET = 'CONSUMER_SECRET'
+OAUTH_TOKEN = '-OAUTH_TOKEN'
+OAUTH_TOKEN_SECRET = 'OAUTH_TOKEN_SECRET'
     
 # authenticate with the Tweepy API
 auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
