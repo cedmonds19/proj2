@@ -24,7 +24,7 @@ CONSUMER_SECRET = 'CONSUMER_SECRET'
 OAUTH_TOKEN = '-OAUTH_TOKEN'
 OAUTH_TOKEN_SECRET = 'OAUTH_TOKEN_SECRET'
     
-# authenticate with the Tweepy API
+# Authentication with Tweepy framework
 auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 auth.set_access_token(OAUTH_TOKEN, OAUTH_TOKEN_SECRET)
 
