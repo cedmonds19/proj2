@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[66]:
-
-
 import pandas as pd
 import twitter
 import json
