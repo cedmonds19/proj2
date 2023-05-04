@@ -299,13 +299,13 @@ de_pred_y = de_model.predict(X_test).round()
 de_pred_x = de_model.predict(X_train).round()
 ```
 
-where de_model is the same implementation as 
+where de_model is the same implementation of a neural network.
 
 ```python
-ga_model = Sequential()
-ga_model.add(keras.Input(shape=(2,)))
-ga_model.add(Dense(10, activation='sigmoid'))
-ga_model.add(Dense(1))
+de_model = Sequential()
+de_model.add(keras.Input(shape=(2,)))
+de_model.add(Dense(10, activation='sigmoid'))
+de_model.add(Dense(1))
 ```
 
-
+Running the the machine learning portion of our code is far easier in a Python notebook. We included a Jupyter notebook version of our machine learning and clustering program so each algorithm can be observed and run separately.
